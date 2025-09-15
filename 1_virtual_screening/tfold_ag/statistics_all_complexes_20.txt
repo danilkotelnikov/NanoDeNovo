@@ -1,0 +1,28 @@
+Statistic for Predicted lDDT-Ca score:
+  Mean: 0.9019
+  Median: 0.9062
+  Std: 0.0193
+  Min: 0.6691
+  Max: 0.9247
+
+Statistic for Predicted ipTM score:
+  Mean: 0.2975
+  Median: 0.2538
+  Std: 0.1346
+  Min: 0.1316
+  Max: 0.8233
+
+Statistic for Predicted pTM score:
+  Mean: 0.6763
+  Median: 0.6623
+  Std: 0.0427
+  Min: 0.6095
+  Max: 0.8694
+
+Statistic for Antigen Predicted lDDT-Ca score:
+  Mean: 0.9094
+  Median: 0.9127
+  Std: 0.0169
+  Min: 0.6360
+  Max: 0.9243
+

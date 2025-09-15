@@ -1,0 +1,28 @@
+General LDDT-Cɑ:
+  Mean: 0.8870
+  Median: 0.9196
+  Std: 0.1080
+  Min: 0.3103
+  Max: 0.9813
+
+General pTM:
+  Mean: 0.8019
+  Median: 0.8443
+  Std: 0.1325
+  Min: 0.1537
+  Max: 0.9168
+
+Filtered LDDT-Cɑ:
+  Mean: 0.9482
+  Median: 0.9504
+  Std: 0.0166
+  Min: 0.9011
+  Max: 0.9813
+
+Filtered pTM:
+  Mean: 0.8801
+  Median: 0.8803
+  Std: 0.0161
+  Min: 0.8501
+  Max: 0.9168
+

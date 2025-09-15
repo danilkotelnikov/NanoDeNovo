@@ -1,0 +1,14 @@
+Alignment Statistics (RMSD<1.0, TM>0.95)
+
+Dataset 20:
+  Total aligned: 1382
+  Passed filters: 838
+  Average TM-score: 0.9574
+  Average RMSD: 0.9686
+
+Dataset 30:
+  Total aligned: 1417
+  Passed filters: 905
+  Average TM-score: 0.9591
+  Average RMSD: 0.9558
+
