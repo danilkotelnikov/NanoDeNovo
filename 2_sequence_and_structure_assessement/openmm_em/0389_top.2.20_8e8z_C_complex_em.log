@@ -1,0 +1,16 @@
+Minimization log for 0389_top.2.20_8e8z_C_complex
+===================================
+Using PDBFixer to add missing terminal groups
+Initial potential energy: 18902851295.897217 kJ/mol
+After 100 steps: Energy = -22277.957458496094 kJ/mol, Change = 18902873573.854675 kJ/mol
+After 200 steps: Energy = -25862.885803222656 kJ/mol, Change = 3584.9283447265625 kJ/mol
+After 300 steps: Energy = -27122.45684814453 kJ/mol, Change = 1259.571044921875 kJ/mol
+After 400 steps: Energy = -27685.732666015625 kJ/mol, Change = 563.2758178710938 kJ/mol
+After 500 steps: Energy = -28098.908813476562 kJ/mol, Change = 413.1761474609375 kJ/mol
+After 600 steps: Energy = -28455.659118652344 kJ/mol, Change = 356.75030517578125 kJ/mol
+After 700 steps: Energy = -28472.152404785156 kJ/mol, Change = 16.4932861328125 kJ/mol
+After 800 steps: Energy = -28472.152404785156 kJ/mol, Change = 0.0 kJ/mol
+Minimization converged (energy change < 10.0 kJ/mol)
+
+Minimization completed in 800 steps
+Final potential energy: -28472.152404785156 kJ/mol
