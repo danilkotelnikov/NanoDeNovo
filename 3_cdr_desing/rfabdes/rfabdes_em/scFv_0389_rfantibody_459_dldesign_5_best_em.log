@@ -1,0 +1,13 @@
+Minimization log for scFv_0389_rfantibody_459_dldesign_5_best
+===================================
+Using PDBFixer to add missing terminal groups
+Initial potential energy: 57591400.43071747 kJ/mol
+After 100 steps: Energy = -26693.27178955078 kJ/mol, Change = 57618093.70250702 kJ/mol
+After 200 steps: Energy = -28981.15802001953 kJ/mol, Change = 2287.88623046875 kJ/mol
+After 300 steps: Energy = -29737.395568847656 kJ/mol, Change = 756.237548828125 kJ/mol
+After 400 steps: Energy = -30284.670471191406 kJ/mol, Change = 547.27490234375 kJ/mol
+After 500 steps: Energy = -30288.757568359375 kJ/mol, Change = 4.08709716796875 kJ/mol
+Minimization converged (energy change < 10.0 kJ/mol)
+
+Minimization completed in 500 steps
+Final potential energy: -30288.757568359375 kJ/mol

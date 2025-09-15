@@ -1,0 +1,1 @@
+/home/user2/rosetta.source.release-371/main/source/bin/rosetta_scripts.linuxgccrelease -parser:protocol relax.xml -out:prefix relaxed_ -out:file:scorefile relax_results.tab -s scFv_0743_rfantibody_387_dldesign_4_best.pdb -nstruct 10 -ex1 -ex2 -database $ROSETTA_DATABASE

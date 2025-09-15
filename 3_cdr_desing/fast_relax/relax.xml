@@ -1,0 +1,35 @@
+<ROSETTASCRIPTS>
+	<SCOREFXNS>
+	    <ScoreFunction name="sf" weights="ref2015" />
+	</SCOREFXNS>
+	<RESIDUE_SELECTORS>
+		<Chain name="ag" chains="T" />
+		<Chain name="nb" chains="H" />
+	</RESIDUE_SELECTORS>
+	<PACKER_PALETTES>
+	</PACKER_PALETTES>
+	<TASKOPERATIONS>
+	</TASKOPERATIONS>
+	<MOVE_MAP_FACTORIES>
+	</MOVE_MAP_FACTORIES>
+	<SIMPLE_METRICS>
+		<RMSDMetric name="rmsd" reference_name="start" super="true" rmsd_type="rmsd_protein_bb_ca" />
+		<RMSDMetric name="ag_rmsd" reference_name="start" super="true" residue_selector="ag" residue_selector_super="nb" rmsd_type="rmsd_all_heavy" />
+	</SIMPLE_METRICS>
+	<FILTERS>
+	</FILTERS>
+	<MOVERS>
+		<SavePoseMover name="save_start" restore_pose="false" reference_name="start" />
+		<FastRelax name="relax" scorefxn="sf" />
+		<InterfaceAnalyzerMover name="ia" scorefxn="sf" interface="H_T" pack_separated="true" />
+	</MOVERS>
+	<PROTOCOLS>
+		<Add mover="save_start" />
+		<Add mover="relax" />
+		<Add mover="ia" />
+		<Add metrics="rmsd,ag_rmsd" />
+	</PROTOCOLS>
+	<OUTPUT />
+</ROSETTASCRIPTS>
+
+
