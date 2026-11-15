@@ -441,6 +441,20 @@ class WorkflowEngine:
                 return False
         return True
 
+    def _ledger_semantically_equal(self, records: list[dict]) -> bool:
+        """Return True when the on-disk ledger matches all non-timing fields."""
+        if not self.ledger_path.exists():
+            return False
+        existing = self._load_existing_ledger()
+        if len(existing) != len(records):
+            return False
+        keys = ("stage", "title", "mode", "status", "detail", "input_hashes", "output_hashes")
+        for rec in records:
+            prev = existing.get(rec.get("stage", ""))
+            if not prev or any(prev.get(k) != rec.get(k) for k in keys):
+                return False
+        return True
+
     def write_ledger(self, records: list[dict]) -> None:
         lines = [json.dumps(r, sort_keys=True) for r in records]
         atomic_write_text(self.ledger_path, "\n".join(lines) + "\n")
@@ -590,7 +604,8 @@ class WorkflowEngine:
                 overall_ok = False
                 break
         if mode == "replay" and overall_ok:
-            self.write_ledger(records)
+            if not self._ledger_semantically_equal(records):
+                self.write_ledger(records)
         elif mode == "live" and records:
             self.write_ledger(records)
         return {"ok": overall_ok, "mode": mode, "records": records, "ledger": str(self.ledger_path)}

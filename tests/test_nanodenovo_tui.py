@@ -68,9 +68,17 @@ def test_dry_run_and_replay_all_stages(tmp_path: Path) -> None:
     assert len(dry["records"]) == 8
     assert [r["stage"] for r in dry["records"]] == [f"S{i}" for i in range(1, 9)]
 
+    assert engine.ledger_path.exists()
+    initial_bytes = engine.ledger_path.read_bytes()
     rep = engine.run_all(mode="replay")
     assert rep["ok"] is True
     assert len(rep["records"]) == 8
+    assert engine.ledger_path.read_bytes() == initial_bytes
+
+    engine.ledger_path.unlink()
+    rep2 = engine.run_all(mode="replay")
+    assert rep2["ok"] is True
+    assert len(rep2["records"]) == 8
     assert engine.ledger_path.exists()
 
     v = engine.verify_ledger()
@@ -133,10 +141,12 @@ def test_nontty_rich_tui_render_and_cli_fallback(tmp_path: Path) -> None:
 
     # Subprocess with closed stdin confirms non-TTY `--ui rich` exits 0 without blocking
     proc = subprocess.run(
-        [sys.executable, str(REPO_ROOT / "nanodenovo.py"), "--repo", str(mini), "--ui", "rich"],
+        [sys.executable, "-B", str(REPO_ROOT / "nanodenovo.py"), "--repo", str(mini), "--ui", "rich"],
         stdin=subprocess.DEVNULL,
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         timeout=15,
         check=False,
     )
