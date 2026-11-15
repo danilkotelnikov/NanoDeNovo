@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NanoDeNovo Audit Plate</title>
+</head>
+<body>
+<div class="fig" id="fig"></div>
+<script>
+const W = 178, H = 122;
+const f = new Fig(document.getElementById('fig'), W, H, { svgTop: true });
+const Tp = (t) => H - t;
+const NS = 'http://www.w3.org/2000/svg';
+
+const svgEl = (tag, attrs) => {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+  f.svg.appendChild(el);
+  return el;
+};
+
+const C = {
+  blue: '#1D397B',
+  green: '#317F45',
+  amber: '#9A5600',
+  slate: '#6E7781',
+  ink: '#0A0A0A',
+  sub: '#2B2B2B',
+  grid: '#D8DEE4'
+};
+
+svgEl('rect', { x: 0.25, y: 0.25, width: W - 0.5, height: H - 0.5, fill: 'none', stroke: C.slate, 'stroke-width': 0.45 });
+svgEl('line', { x1: 89.5, y1: 3.0, x2: 89.5, y2: 117.5, stroke: C.grid, 'stroke-width': 0.28 });
+svgEl('line', { x1: 2.0, y1: 58.0, x2: 176.0, y2: 58.0, stroke: C.grid, 'stroke-width': 0.28 });
+
+// ============================================================
+// PANEL A: ProteinMPNN NLL sort audit (n=3000 per dataset)
+// ============================================================
+f.letter('a', 2.0, Tp(3.2));
+f.label(7.0, Tp(4.3), 'ProteinMPNN NLL sort fix (n=3000/ds)', { fs: 7.0, bold: true, color: C.ink });
+
+// Complete mark legend: bar=IQR, vertical tick=median, filled/open dot=mean, triangle=original mean
+svgEl('line', { x1: 6.0, y1: 9.8, x2: 11.5, y2: 9.8, stroke: C.blue, 'stroke-width': 1.25 });
+svgEl('line', { x1: 7.8, y1: 8.4, x2: 7.8, y2: 11.2, stroke: C.blue, 'stroke-width': 0.6 });
+svgEl('circle', { cx: 9.8, cy: 9.8, r: 0.95, fill: C.blue });
+f.label(12.8, Tp(9.8), 'Top-3 (IQR, med, \u25cfmean)', { fs: 6.55, color: C.blue });
+
+svgEl('line', { x1: 45.0, y1: 9.8, x2: 49.0, y2: 9.8, stroke: C.slate, 'stroke-width': 1.25 });
+svgEl('circle', { cx: 47.0, cy: 9.8, r: 0.95, fill: '#FFFFFF', stroke: C.slate, 'stroke-width': 0.4 });
+f.label(50.3, Tp(9.8), 'Worst', { fs: 6.55, color: C.slate });
+
+svgEl('polygon', { points: `63.0,${9.8 - 1.1} 64.1,${9.8 + 0.95} 61.9,${9.8 + 0.95}`, fill: C.amber });
+f.label(65.3, Tp(9.8), 'Orig bug mean', { fs: 6.55, color: C.amber });
+
+const ax0 = 26.5, ax1 = 83.5, amin = 0.76, amax = 1.16;
+const aX = (v) => ax0 + ((v - amin) / (amax - amin)) * (ax1 - ax0);
+svgEl('line', { x1: ax0, y1: 47.5, x2: ax1, y2: 47.5, stroke: C.ink, 'stroke-width': 0.35 });
+[0.80, 0.90, 1.00, 1.10].forEach((v) => {
+  const x = aX(v);
+  svgEl('line', { x1: x, y1: 15.0, x2: x, y2: 47.5, stroke: C.grid, 'stroke-width': 0.22 });
+  svgEl('line', { x1: x, y1: 47.5, x2: x, y2: 48.6, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(x, Tp(50.8), v.toFixed(2), { fs: 6.55, ha: 'center', color: C.sub });
+});
+f.label(55.0, Tp(54.8), 'Mean sequence NLL', { fs: 6.55, bold: true, ha: 'center', color: C.sub });
+
+const drawIQR = (yTop, q1, med, q3, mean, col, open = false) => {
+  svgEl('line', { x1: aX(q1), y1: yTop, x2: aX(q3), y2: yTop, stroke: col, 'stroke-width': 1.25 });
+  svgEl('line', { x1: aX(med), y1: yTop - 1.6, x2: aX(med), y2: yTop + 1.6, stroke: col, 'stroke-width': 0.6 });
+  svgEl('circle', { cx: aX(mean), cy: yTop, r: 1.1, fill: open ? '#FFFFFF' : col, stroke: col, 'stroke-width': 0.4 });
+};
+
+f.label(25.0, Tp(18.5), 'ds20 top-3', { fs: 6.55, ha: 'right', color: C.blue });
+drawIQR(18.5, 0.8067, 0.8775, 0.9527, 0.8979, C.blue, false);
+
+f.label(25.0, Tp(25.5), 'ds20 worst', { fs: 6.55, ha: 'right', color: C.slate });
+drawIQR(25.5, 0.9279, 1.0031, 1.0930, 1.0343, C.slate, true);
+svgEl('polygon', { points: `${aX(1.0257)},${22.2 - 1.1} ${aX(1.0257) + 1.1},${22.2 + 0.95} ${aX(1.0257) - 1.1},${22.2 + 0.95}`, fill: C.amber });
+f.label(aX(1.0257) - 1.8, Tp(22.2), '1.026', { fs: 6.55, ha: 'right', color: C.amber });
+
+f.label(25.0, Tp(33.5), 'ds30 top-3', { fs: 6.55, ha: 'right', color: C.blue });
+drawIQR(33.5, 0.8720, 0.9222, 1.0006, 0.9489, C.blue, false);
+
+f.label(25.0, Tp(40.5), 'ds30 worst', { fs: 6.55, ha: 'right', color: C.slate });
+drawIQR(40.5, 1.0052, 1.0423, 1.1336, 1.0893, C.slate, true);
+svgEl('polygon', { points: `${aX(1.0793)},${37.2 - 1.1} ${aX(1.0793) + 1.1},${37.2 + 0.95} ${aX(1.0793) - 1.1},${37.2 + 0.95}`, fill: C.amber });
+f.label(aX(1.0793) - 1.8, Tp(37.2), '1.079', { fs: 6.55, ha: 'right', color: C.amber });
+
+// ============================================================
+// PANEL B: USalign refold self-consistency (n=6200 total)
+// ============================================================
+f.letter('b', 92.5, Tp(3.2));
+f.label(97.5, Tp(4.3), 'USalign vs backbones (n=6200)', { fs: 7.0, bold: true, color: C.ink });
+f.label(97.5, Tp(8.2), '<1.5 \u00c5 & TM\u22650.9: 0/6200', { fs: 6.55, color: C.sub });
+
+svgEl('line', { x1: 127.0, y1: 8.2, x2: 130.6, y2: 8.2, stroke: C.slate, 'stroke-width': 1.1 });
+svgEl('line', { x1: 128.4, y1: 7.0, x2: 128.4, y2: 9.4, stroke: C.slate, 'stroke-width': 0.55 });
+svgEl('circle', { cx: 129.8, cy: 8.2, r: 0.85, fill: '#FFFFFF', stroke: C.slate, 'stroke-width': 0.45 });
+f.label(131.6, Tp(8.2), 'orig', { fs: 6.55, color: C.slate });
+svgEl('line', { x1: 138.0, y1: 8.2, x2: 141.6, y2: 8.2, stroke: C.blue, 'stroke-width': 1.2 });
+svgEl('line', { x1: 139.4, y1: 7.0, x2: 139.4, y2: 9.4, stroke: C.blue, 'stroke-width': 0.55 });
+svgEl('circle', { cx: 140.8, cy: 8.2, r: 0.85, fill: C.blue });
+f.label(142.6, Tp(8.2), 'corr (IQR, med, mean)', { fs: 6.55, color: C.sub });
+
+const bx0 = 117.5, bx1 = 152.5, bmin = 0.55, bmax = 0.85;
+const bX = (v) => bx0 + ((v - bmin) / (bmax - bmin)) * (bx1 - bx0);
+svgEl('line', { x1: bx0, y1: 47.5, x2: bx1, y2: 47.5, stroke: C.ink, 'stroke-width': 0.35 });
+[0.60, 0.70, 0.80].forEach((v) => {
+  const x = bX(v);
+  svgEl('line', { x1: x, y1: 16.0, x2: x, y2: 47.5, stroke: C.grid, 'stroke-width': 0.22 });
+  svgEl('line', { x1: x, y1: 47.5, x2: x, y2: 48.6, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(x, Tp(50.8), v.toFixed(1), { fs: 6.55, ha: 'center', color: C.sub });
+});
+f.label(135.0, Tp(54.8), 'USalign TM-score', { fs: 6.55, bold: true, ha: 'center', color: C.sub });
+f.label(164.5, Tp(13.0), 'CDR3 \u2264 3 \u00c5 (placed)', { fs: 6.55, bold: true, ha: 'center', color: C.sub });
+
+const bRows = [
+  ['corr_20 (n=3000)', 20.0, 0.6082, 0.6976, 0.7990, 0.6880, '5.6% (145/2608)', C.blue,  false],
+  ['orig_20 (n=100)',  27.0, 0.5931, 0.6900, 0.7986, 0.6834, '2.1% (2/95)',     C.slate, true],
+  ['corr_30 (n=3000)', 34.0, 0.6225, 0.7061, 0.7940, 0.6958, '5.6% (148/2665)', C.blue,  false],
+  ['orig_30 (n=100)',  41.0, 0.6210, 0.6923, 0.7912, 0.6936, '4.3% (4/93)',     C.slate, true]
+];
+bRows.forEach(([lbl, yt, q1, med, q3, mean, cdr, col, open]) => {
+  f.label(116.2, Tp(yt), lbl, { fs: 6.55, ha: 'right', bold: !open, color: col });
+  svgEl('line', { x1: bX(q1), y1: yt, x2: bX(q3), y2: yt, stroke: col, 'stroke-width': 1.25 });
+  svgEl('line', { x1: bX(med), y1: yt - 1.5, x2: bX(med), y2: yt + 1.5, stroke: col, 'stroke-width': 0.55 });
+  svgEl('circle', { cx: bX(mean), cy: yt, r: 1.05, fill: open ? '#FFFFFF' : col, stroke: col, 'stroke-width': 0.4 });
+  f.label(154.0, Tp(yt), cdr, { fs: 6.55, color: col });
+});
+
+// ============================================================
+// PANEL C: Filter cutoffs stacked single-axis subplots (ds20, n=2997)
+// Truth standard: refold TM >= 0.90 & RMSD <= 2.0 A
+// ============================================================
+f.letter('c', 2.0, Tp(60.5));
+f.label(7.0, Tp(61.6), 'Cutoffs on ds20 (pLDDT>0.90, n=2997)', { fs: 7.0, bold: true, color: C.ink });
+f.label(7.0, Tp(65.5), 'Reference truth: refold TM \u2265 0.90 & RMSD \u2264 2.0 \u00c5', { fs: 6.55, color: C.sub });
+
+const cx0 = 16.5, cx1 = 83.0;
+const ptmX = (v) => cx0 + ((v - 0.68) / (0.87 - 0.68)) * (cx1 - cx0);
+const gridPts = [
+  [0.70, 0.705, 405, 86],
+  [0.75, 0.705, 405, 86],
+  [0.80, 0.698, 430, 83],
+  [0.85, 0.540, 908, 42]
+];
+
+// Top sub-axis C1: Youden J (0.50 .. 0.75)
+const c1Top = 69.5, c1Bot = 86.0;
+const jY = (v) => c1Bot - ((v - 0.48) / (0.76 - 0.48)) * (c1Bot - c1Top);
+svgEl('line', { x1: cx0, y1: c1Bot, x2: cx1, y2: c1Bot, stroke: C.ink, 'stroke-width': 0.35 });
+svgEl('line', { x1: cx0, y1: c1Top, x2: cx0, y2: c1Bot, stroke: C.ink, 'stroke-width': 0.35 });
+[0.50, 0.60, 0.70].forEach((v) => {
+  const y = jY(v);
+  svgEl('line', { x1: cx0 - 1.0, y1: y, x2: cx0, y2: y, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(cx0 - 1.6, Tp(y), v.toFixed(2), { fs: 6.55, ha: 'right', color: C.sub });
+});
+f.label(5.0, Tp(77.8), 'Youden J', { fs: 6.55, bold: true, ha: 'center', rot: true, color: C.blue });
+
+svgEl('polyline', {
+  points: gridPts.map(([p, j]) => `${ptmX(p)},${jY(j)}`).join(' '),
+  fill: 'none', stroke: C.blue, 'stroke-width': 0.75
+});
+gridPts.forEach(([p, j]) => {
+  const x = ptmX(p), y = jY(j);
+  svgEl('circle', { cx: x, cy: y, r: 1.2, fill: C.blue, stroke: '#FFFFFF', 'stroke-width': 0.25 });
+  if (p === 0.70) f.label(x + 2.5, Tp(y + 3.0), '0.705', { fs: 6.55, ha: 'center', color: C.blue });
+  if (p === 0.75) f.label(x, Tp(y + 3.0), '0.705', { fs: 6.55, ha: 'center', color: C.blue });
+  if (p === 0.80) f.label(x + 2.2, Tp(y - 2.6), '0.698', { fs: 6.55, ha: 'left', color: C.blue });
+  if (p === 0.85) f.label(x - 2.4, Tp(y + 0.2), '0.540', { fs: 6.55, ha: 'right', bold: true, color: C.blue });
+});
+
+// Bottom sub-axis C2: Counts (Missed FN in amber, FP in green/slate)
+const c2Top = 90.0, c2Bot = 109.0;
+const cntY = (v) => c2Bot - (v / 1050) * (c2Bot - c2Top);
+svgEl('line', { x1: cx0, y1: c2Bot, x2: cx1, y2: c2Bot, stroke: C.ink, 'stroke-width': 0.35 });
+svgEl('line', { x1: cx0, y1: c2Top, x2: cx0, y2: c2Bot, stroke: C.ink, 'stroke-width': 0.35 });
+[0, 500, 1000].forEach((v) => {
+  const y = cntY(v);
+  svgEl('line', { x1: cx0 - 1.0, y1: y, x2: cx0, y2: y, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(cx0 - 1.6, Tp(y), String(v), { fs: 6.55, ha: 'right', color: C.sub });
+});
+f.label(5.0, Tp(99.5), 'Count', { fs: 6.55, bold: true, ha: 'center', rot: true, color: C.ink });
+
+[0.70, 0.75, 0.80, 0.85].forEach((v) => {
+  const x = ptmX(v);
+  svgEl('line', { x1: x, y1: c2Bot, x2: x, y2: c2Bot + 1.0, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(x, Tp(112.2), v.toFixed(2), { fs: 6.55, ha: 'center', color: C.sub });
+});
+f.label(50.0, Tp(116.2), 'pTM cutoff', { fs: 6.55, bold: true, ha: 'center', color: C.sub });
+
+svgEl('polyline', {
+  points: gridPts.map(([p, , fn]) => `${ptmX(p)},${cntY(fn)}`).join(' '),
+  fill: 'none', stroke: C.amber, 'stroke-width': 0.7, 'stroke-dasharray': '1.6,0.9'
+});
+svgEl('polyline', {
+  points: gridPts.map(([p, , , fp]) => `${ptmX(p)},${cntY(fp)}`).join(' '),
+  fill: 'none', stroke: C.green, 'stroke-width': 0.7
+});
+
+gridPts.forEach(([p, , fn, fp]) => {
+  const x = ptmX(p);
+  const yFn = cntY(fn), yFp = cntY(fp);
+  svgEl('polygon', { points: `${x},${yFn - 1.2} ${x + 1.1},${yFn + 0.9} ${x - 1.1},${yFn + 0.9}`, fill: C.amber, stroke: '#FFFFFF', 'stroke-width': 0.25 });
+  svgEl('rect', { x: x - 1.0, y: yFp - 1.0, width: 2.0, height: 2.0, fill: C.green, stroke: '#FFFFFF', 'stroke-width': 0.25 });
+  if (p === 0.70) {
+    const xMid = ptmX(0.725);
+    f.label(xMid, Tp(yFn - 3.0), 'Missed: 405 (flat)', { fs: 6.55, ha: 'center', color: C.amber });
+    f.label(xMid, Tp(yFp - 2.7), 'FP: 86', { fs: 6.55, ha: 'center', color: C.green });
+  }
+  if (p === 0.80) {
+    f.label(x - 1.4, Tp(yFn - 2.8), '430', { fs: 6.55, ha: 'right', color: C.amber });
+    f.label(x, Tp(yFp - 2.6), '83', { fs: 6.55, ha: 'center', color: C.green });
+  }
+  if (p === 0.85) {
+    f.label(x - 2.4, Tp(yFn), '908', { fs: 6.55, ha: 'right', bold: true, color: C.amber });
+    f.label(x - 2.4, Tp(yFp - 3.2), '42 FP', { fs: 6.55, ha: 'right', color: C.green });
+  }
+});
+
+// ============================================================
+// PANEL D: Interface clash audit (n=11 complexes)
+// Raised zero-line above bottom axis spine so all markers are unclipped.
+// ============================================================
+f.letter('d', 92.5, Tp(60.5));
+f.label(97.5, Tp(61.6), 'Interface clashes (n=11)', { fs: 7.0, bold: true, color: C.ink });
+
+const dx0 = 104.5, dx1 = 171.5, dTop = 69.5, dBot = 109.0;
+const dX = (v) => dx0 + ((v - 0.3) / (2.85 - 0.3)) * (dx1 - dx0);
+const clY = (v) => dBot - ((v + 5) / 70.0) * (dBot - dTop);
+
+svgEl('line', { x1: dx0, y1: dBot, x2: dx1, y2: dBot, stroke: C.ink, 'stroke-width': 0.35 });
+svgEl('line', { x1: dx0, y1: dTop, x2: dx0, y2: dBot, stroke: C.ink, 'stroke-width': 0.35 });
+svgEl('line', { x1: dx0, y1: clY(0), x2: dx1, y2: clY(0), stroke: '#CBD5E1', 'stroke-width': 0.25, 'stroke-dasharray': '1.0,0.8' });
+
+[0, 20, 40, 60].forEach((v) => {
+  const y = clY(v);
+  svgEl('line', { x1: dx0 - 1.1, y1: y, x2: dx0, y2: y, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(dx0 - 1.8, Tp(y), String(v), { fs: 6.55, ha: 'right', color: C.sub });
+});
+f.label(94.5, Tp(89.0), 'Clashes (<2.2 \u00c5)', { fs: 6.55, bold: true, ha: 'center', rot: true, color: C.sub });
+
+[0.5, 1.0, 1.5, 2.0, 2.5].forEach((v) => {
+  const x = dX(v);
+  svgEl('line', { x1: x, y1: dBot, x2: x, y2: dBot + 1.1, stroke: C.ink, 'stroke-width': 0.35 });
+  f.label(x, Tp(112.2), v.toFixed(1), { fs: 6.55, ha: 'center', color: C.sub });
+});
+f.label(138.0, Tp(116.2), 'Min heavy-atom distance (\u00c5)', { fs: 6.55, bold: true, ha: 'center', color: C.sub });
+
+svgEl('line', { x1: dX(2.2), y1: dTop, x2: dX(2.2), y2: dBot, stroke: C.slate, 'stroke-width': 0.45, 'stroke-dasharray': '1.0,0.8' });
+f.label(dX(2.2) - 1.3, Tp(71.5), '2.2 \u00c5', { fs: 6.55, ha: 'right', color: C.slate });
+
+const unrelaxed = [
+  [0.54, 23],
+  [0.95, 18],
+  [1.03, 27],
+  [1.07, 27],
+  [0.85, 59],
+  [0.88, 55]
+];
+const relaxed = [
+  [2.42, 0, 0],
+  [2.53, 0, 0],
+  [2.59, 0, -0.75],
+  [2.60, 0, 0.75],
+  [2.66, 0, 0]
+];
+
+unrelaxed.forEach(([dist, cl]) => {
+  const x = dX(dist), y = clY(cl);
+  svgEl('polygon', { points: `${x},${y - 1.3} ${x + 1.2},${y + 0.95} ${x - 1.2},${y + 0.95}`, fill: C.amber, stroke: '#FFFFFF', 'stroke-width': 0.25 });
+});
+// Micro-dodge +/-0.75 mm on nearly coincident 2.59/2.60 A relaxed points within y=0 band
+relaxed.forEach(([dist, cl, dy]) => {
+  svgEl('circle', { cx: dX(dist), cy: clY(cl) + dy, r: 0.78, fill: C.green, stroke: '#FFFFFF', 'stroke-width': 0.28 });
+});
+
+f.label(dX(0.95), Tp(clY(58.0)), 'Unrelaxed Rosetta (n=6)', { fs: 6.55, bold: true, color: C.amber });
+// Pointer hairline directly to 0389-304-6 at (0.54, 23)
+svgEl('line', { x1: dX(0.54), y1: clY(23) - 1.4, x2: dX(0.65), y2: clY(35.0), stroke: C.amber, 'stroke-width': 0.35 });
+f.label(dX(0.66), Tp(clY(36.0)), '0389-304-6 (23)', { fs: 6.55, ha: 'left', color: C.amber });
+
+f.label(174.8, Tp(clY(21.5)), 'Relaxed (n=5)', { fs: 6.55, bold: true, ha: 'right', color: C.green });
+f.label(174.8, Tp(clY(14.5)), '2.42\u20132.66 \u00c5', { fs: 6.55, ha: 'right', color: C.green });
+f.label(174.8, Tp(clY(8.0)), '0 clashes', { fs: 6.55, ha: 'right', color: C.green });
+
+f.boundary('Computed audit, PDB 8e8z_C (10.3390/ijms26199262, CC BY 4.0); no assay.', { x: 2.0, color: C.sub });
+</script>
+</body>
+</html>

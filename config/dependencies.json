@@ -1,0 +1,121 @@
+{
+  "schema_version": "1.0.0",
+  "project": "NanoDeNovo",
+  "target_reference": "PDB 8e8z_C (DOI 10.3390/ijms26199262)",
+  "updated": "15.XI.2026",
+  "python_requires": ">=3.11",
+  "host_packages": [
+    {
+      "name": "numpy",
+      "import_name": "numpy",
+      "min_version": "1.26.4",
+      "locked_version": "2.4.4",
+      "required_for": ["replay", "dry-run", "live"]
+    },
+    {
+      "name": "scipy",
+      "import_name": "scipy",
+      "min_version": "1.13.1",
+      "locked_version": "1.17.1",
+      "required_for": ["replay", "live"]
+    },
+    {
+      "name": "biopython",
+      "import_name": "Bio",
+      "min_version": "1.84",
+      "locked_version": "1.87",
+      "required_for": ["live"]
+    },
+    {
+      "name": "pandas",
+      "import_name": "pandas",
+      "min_version": "2.2.2",
+      "locked_version": "3.0.3",
+      "required_for": ["replay", "live"]
+    },
+    {
+      "name": "matplotlib",
+      "import_name": "matplotlib",
+      "min_version": "3.9.2",
+      "locked_version": "3.10.8",
+      "required_for": ["live"]
+    },
+    {
+      "name": "rich",
+      "import_name": "rich",
+      "min_version": "13.9.4",
+      "locked_version": "14.3.3",
+      "required_for": ["replay", "dry-run", "live"]
+    },
+    {
+      "name": "pytest",
+      "import_name": "pytest",
+      "min_version": "8.3.3",
+      "locked_version": "9.0.3",
+      "required_for": ["dev"]
+    }
+  ],
+  "optional_packages": [
+    {
+      "name": "textual",
+      "import_name": "textual",
+      "min_version": "0.85.2",
+      "locked_version": "0.85.2",
+      "purpose": "Optional interactive mouse/panel TUI frontend (Rich TUI is default)"
+    },
+    {
+      "name": "openmm",
+      "import_name": "openmm",
+      "min_version": "8.2.0",
+      "locked_version": "8.2.0",
+      "purpose": "Restrained implicit-solvent minimization in Stage S7 (or inside WSL)"
+    },
+    {
+      "name": "pdbfixer",
+      "import_name": "pdbfixer",
+      "min_version": "1.9",
+      "locked_version": "1.9",
+      "purpose": "Hydrogen placement and topology preparation before OpenMM relaxation"
+    }
+  ],
+  "external_binaries": [
+    {
+      "name": "USalign",
+      "env_override": "NANODENOVO_USALIGN",
+      "required_for": ["live:S5"],
+      "license_note": "University of Michigan academic / source distribution"
+    },
+    {
+      "name": "wsl.exe",
+      "env_override": "NANODENOVO_WSL_PYTHON",
+      "required_for": ["wsl-gpu"],
+      "platform": "win32"
+    }
+  ],
+  "gpu_checkpoints": [
+    {
+      "stage": "S1",
+      "name": "RFantibody",
+      "license": "MIT",
+      "notes": "De novo VHH backbone diffusion and RF2 refinement"
+    },
+    {
+      "stage": "S2",
+      "name": "ProteinMPNN (v_48_020, v_48_030)",
+      "license": "MIT",
+      "notes": "Inverse folding weights in single-session batch JSONL mode"
+    },
+    {
+      "stage": "S4",
+      "name": "tFold-Ab / ESMFold",
+      "license": "Apache-2.0 / MIT",
+      "notes": "Single-chain monomer refolding across inclusive 1..1000"
+    },
+    {
+      "stage": "S6",
+      "name": "tFold-Ag",
+      "license": "Apache-2.0",
+      "notes": "VHH-antigen complex co-folding on PDB 8e8z_C"
+    }
+  ]
+}

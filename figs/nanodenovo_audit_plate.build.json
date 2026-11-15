@@ -1,0 +1,20 @@
+{
+ "name": "nanodenovo_audit_plate",
+ "widthMm": 178,
+ "heightMm": 122,
+ "textPt": [
+  6.55,
+  7,
+  8
+ ],
+ "boxShare": 0,
+ "boxes": 0,
+ "nestedBoxes": 0,
+ "hasPlots": true,
+ "scorecardShare": 0,
+ "seriesHexes": [
+  "#1D397B",
+  "#9A5600",
+  "#317F45"
+ ]
+}

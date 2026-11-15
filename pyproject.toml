@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nanodenovo-workflow"
+version = "0.4.0"
+description = "Automated 8-stage VHH design workflow, TUI, and repaired legacy pipeline for PDB 8e8z_C."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26.4",
+    "scipy>=1.13.1",
+    "biopython>=1.84",
+    "pandas>=2.2.2",
+    "matplotlib>=3.9.2",
+    "rich>=13.9.4",
+]
+
+[project.optional-dependencies]
+tui = ["textual>=0.85.2"]
+relax = ["openmm>=8.2.0", "pdbfixer>=1.9"]
+dev = ["pytest>=8.3.3"]
+
+[project.scripts]
+nanodenovo = "nanodenovo_tui.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["nanodenovo_tui*", "pipeline*", "tools*"]

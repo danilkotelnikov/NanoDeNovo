@@ -1,0 +1,10 @@
+# Pinned host dependencies verified on Python 3.11 (15.XI.2026)
+numpy==2.4.4
+scipy==1.17.1
+biopython==1.87
+pandas==3.0.3
+matplotlib==3.10.8
+rich==14.3.3
+pytest==9.0.3
+# Optional interactive Textual UI extension:
+# textual==0.85.2
